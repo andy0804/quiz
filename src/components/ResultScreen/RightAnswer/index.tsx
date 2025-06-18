@@ -9,8 +9,6 @@ interface RightAnswerProps {
 }
 
 const RightAnswer: FC<RightAnswerProps> = ({ correctAnswers, choices, explanation, reading }) => {
-  console.log("explanation", explanation)
-  console.log("reading", reading)
   return (
     <div>
       <p className="text-darker-grey mt-4 text-lg leading-[1.2] font-normal">

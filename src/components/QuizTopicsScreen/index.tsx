@@ -1,16 +1,13 @@
-import { AppLogo } from '../../config/icons'
 import { useQuiz } from '../../context/QuizContext'
-import { quizTopics } from '../../data/quizTopics'
 import { ScreenTypes } from '../../types'
 
-import cn from 'classnames'
 import Button from '../ui/Button'
 import CenterCardContainer from '../ui/CenterCardContainer'
 import HighlightedText from '../ui/HighlightedText'
 import PageCenter from '../ui/PageCenter'
 
 const QuizTopicsScreen: React.FC = () => {
-  const { quizTopic, selectQuizTopic, setCurrentScreen } = useQuiz()
+  const {  setCurrentScreen } = useQuiz()
 
   const goToQuizDetailsScreen = () => {
     setCurrentScreen(ScreenTypes.QuizDetailsScreen)
@@ -25,7 +22,6 @@ const QuizTopicsScreen: React.FC = () => {
           <HighlightedText> Practise Quiz 1</HighlightedText>
         </h2>
         <p className="text-center text-xl leading-7 font-medium">
-          Select topic below to start your Quiz.
         </p>
         <div className="mt-10 mb-11 flex max-w-full flex-wrap justify-center gap-5 md:max-w-[60%] md:gap-7">
           {/* {quizTopics.map(({ title, icon, disabled }) => (

@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import { FC } from 'react'
-import { AppLogo, Refresh } from '../../config/icons'
+import {  Refresh } from '../../config/icons'
 import { useQuiz } from '../../context/QuizContext'
 import { refreshPage } from '../../utils/helpers'
 import Button from '../ui/Button'
