@@ -16,196 +16,173 @@ export const aws: Topic = {
   questions: [
     {
       question:
-        'Your team needs to allow a third-party vendor to upload files only to s3://your-bucket/uploads/. They should have no other permissions. What is the best approach?',
+        'A developer accidentally deletes an important object in an S3 bucket. You want to prevent this in the future while still allowing deletions under strict conditions. What is the best approach?',
       choices: [
-        'Attach an IAM policy to the vendor’s user with s3:PutObject allowed only on arn:aws:s3:::your-bucket/uploads/*',
-        'Add the vendor user to a group with full s3:* permissions on the bucket',
-        'Use a bucket ACL to grant the vendor Write access on the uploads prefix',
-        'Assign AmazonS3FullAccess to the vendor’s IAM role',
+        'Enable versioning on the bucket and implement MFA Delete',
+        'Use S3 Glacier Deep Archive for all objects',
+        'Enable S3 event notifications for deletions',
+        'Restrict all delete permissions for the IAM user',
       ],
       type: 'MCQs',
-      correctAnswers: [
-        'Attach an IAM policy to the vendor’s user with s3:PutObject allowed only on arn:aws:s3:::your-bucket/uploads/*',
-      ],
+      correctAnswers: ['Enable versioning on the bucket and implement MFA Delete'],
       score: 10,
       explanation:
-        'This follows least-privilege best practice—granting only the specific S3 action on the required prefix and no wider permissions.',
+        'Versioning allows recovery of deleted objects. MFA Delete adds a security layer to delete operations, helping prevent accidental deletions.',
       reading:
-        'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#least-privilege',
+        'https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMFADelete.html',
     },
     {
       question:
-        'You have daily logs uploaded to S3 and need a long-term, cost‑effective storage strategy. Access is infrequent after 30 days. Which lifecycle policy is most appropriate?',
+        'Which AWS CLI command lets you check which IAM user is currently authenticated via CLI?',
       choices: [
-        'Transition objects to S3 Standard‑IA after 30 days, then Glacier Deep Archive after 90 days',
-        'Keep all objects in S3 Standard indefinitely',
-        'Transition objects to Glacier immediately after upload',
-        'Delete objects after 30 days to minimize costs',
+        'aws iam get-user',
+        'aws sts get-caller-identity',
+        'aws iam describe-user',
+        'aws iam whoami',
       ],
       type: 'MCQs',
-      correctAnswers: [
-        'Transition objects to S3 Standard‑IA after 30 days, then Glacier Deep Archive after 90 days',
-      ],
+      correctAnswers: ['aws sts get-caller-identity'],
       score: 10,
       explanation:
-        'Standard‑IA is cost-effective for infrequent older logs, and Glacier Deep Archive is ideal for long-term archival at minimal cost.',
+        'The `aws sts get-caller-identity` command returns the IAM user, account, and ARN of the calling identity.',
       reading:
-        'https://aws.amazon.com/s3/storage-classes/',
+        'https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html',
     },
     {
       question:
-        'You need to automate creation of an IAM role named AppDeploymentRole for EC2 to assume and deploy apps. Which AWS CLI commands are needed? (Select two)',
+        'A cross-region S3 replication setup is not working. All bucket permissions are correctly set. What could be the cause?',
       choices: [
-        'aws iam create-role --role-name AppDeploymentRole ...',
-        'aws iam put-role-policy --role-name AppDeploymentRole ...',
-        'aws sts create-session --role-arn ...',
-        'aws ec2 assign-role --role-name AppDeploymentRole ...',
-      ],
-      type: 'MAQs',
-      correctAnswers: [
-        'aws iam create-role --role-name AppDeploymentRole ...',
-        'aws iam put-role-policy --role-name AppDeploymentRole ...',
-      ],
-      score: 10,
-      explanation:
-        'First create the IAM role, then attach policies. put-role-policy adds inline policies; sts is for assuming; and “assign-role” is invalid.',
-      reading:
-        'https://docs.aws.amazon.com/cli/latest/reference/iam/create-role.html',
-    },
-    {
-      question:
-        'In AWS CLI, after creating a role via create-role, which command attaches an AWS managed policy to it?',
-      choices: [
-        'aws iam attach-role-policy --role-name NAME --policy-arn ARN',
-        'aws iam put-role-policy --role-name NAME --policy-arn ARN',
-        'aws iam attach-policy --role NAME --arn ARN',
-        'aws iam enable-role-policy --role NAME --policy ARN',
+        'Versioning is not enabled on both source and destination buckets',
+        'The destination bucket has a lifecycle policy enabled',
+        'Objects are encrypted with SSE-KMS',
+        'Replication is disabled globally in the account',
       ],
       type: 'MCQs',
-      correctAnswers: [
-        'aws iam attach-role-policy --role-name NAME --policy-arn ARN',
-      ],
+      correctAnswers: ['Versioning is not enabled on both source and destination buckets'],
       score: 10,
       explanation:
-        'attach-role-policy is the correct command for linking AWS managed policies to a role.',
+        'Cross-region replication requires versioning to be enabled on both the source and destination buckets.',
       reading:
-        'https://docs.aws.amazon.com/cli/latest/reference/iam/attach-role-policy.html',
+        'https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html',
     },
     {
       question:
-        'You’re designing a fault-tolerant web application on EC2 with RDS. You want resiliency to AZ failure within your primary region. Which architecture should you implement?',
+        'Which AWS Region should you choose for compliance with data residency laws in the European Union?',
       choices: [
-        'Distribute web servers across at least two Availability Zones in the region. Use RDS in a Multi‑AZ deployment.',
-        'Launch all EC2 instances in one AZ and rely on snapshots for RDS.',
-        'Deploy EC2 servers in one AZ and launch a duplicated RDS in a different region.',
-        'Use a single AZ deployment with frequent snapshots.',
+        'eu-central-1 (Frankfurt)',
+        'us-east-1 (N. Virginia)',
+        'ap-southeast-2 (Sydney)',
+        'sa-east-1 (São Paulo)',
       ],
       type: 'MCQs',
-      correctAnswers: [
-        'Distribute web servers across at least two Availability Zones in the region. Use RDS in a Multi‑AZ deployment.',
-      ],
+      correctAnswers: ['eu-central-1 (Frankfurt)'],
       score: 10,
       explanation:
-        'This setup provides automated failover at both compute and database levels within the region.',
+        'eu-central-1 (Frankfurt) is a common choice for EU data residency compliance because it resides within the EU jurisdiction.',
       reading:
-        'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html',
+        'https://aws.amazon.com/about-aws/global-infrastructure/regions_az/',
     },
     {
       question:
-        'You plan a global application: which AWS strategy reduces latency and improves resilience worldwide?',
+        'A junior admin wants to grant temporary S3 read-only access to a developer for 12 hours using AWS CLI. What’s the correct approach?',
       choices: [
-        'Deploy the app in multiple Regions and separate AZs within each Region',
-        'Deploy in one Region but multiple AZs',
-        'Deploy in one AZ and replicate snapshots to other Regions',
-        'Use local Zones only',
+        'Create a temporary session using AWS STS assume-role',
+        'Attach the AmazonS3ReadOnlyAccess policy directly to the user',
+        'Use S3 pre-signed URLs for 12 hours',
+        'Create an access key and delete it after 12 hours',
       ],
       type: 'MCQs',
-      correctAnswers: [
-        'Deploy the app in multiple Regions and separate AZs within each Region',
-      ],
+      correctAnswers: ['Create a temporary session using AWS STS assume-role'],
       score: 10,
       explanation:
-        'Multi-region with AZ separation allows regional failover and latency reduction closer to users.',
+        'STS provides temporary credentials that expire after a set time, ideal for temporary access scenarios without needing long-term keys.',
       reading:
-        'https://aws.amazon.com/architecture/global-infrastructure/',
+        'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html',
     },
-    {
-      question:
-        'Your organization wants stricter security: all IAM access must require MFA. What IAM policy condition would you use to enforce this?',
-      choices: [
-        '"Condition": {"Bool": {"aws:MultiFactorAuthPresent": "true"}}',
-        '"Condition": {"StringEquals": {"aws:PrincipalType": "MFA"}}',
-        '"Condition": {"IpAddress": {"aws:SourceIp": "MFA_IP_RANGE"}}',
-        '"Condition": {"Bool": {"aws:ViaMFA": "true"}}',
-      ],
-      type: 'MCQs',
-      correctAnswers: [
-        '"Condition": {"Bool": {"aws:MultiFactorAuthPresent": "true"}}',
-      ],
-      score: 10,
-      explanation:
-        'This condition ensures the request includes MFA-authenticated temporary credentials. BoolIfExists is similar but broader :contentReference[oaicite:1]{index=1}.',
-      reading:
-        'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html',
-    },
-    {
-      question:
-        'You need to clean up IAM permissions: which best practice helps minimize drift and maintain least privilege?',
-      choices: [
-        'Use IAM Access Analyzer to generate least‑privilege policies',
-        'Aggregate users under a single all‑powerful group',
-        'Assign AWS‑managed policies to everyone',
-        'Avoid using permissions boundaries',
-      ],
-      type: 'MCQs',
-      correctAnswers: [
-        'Use IAM Access Analyzer to generate least‑privilege policies',
-      ],
-      score: 10,
-      explanation:
-        'IAM Access Analyzer helps craft least-privilege policies by analyzing actual usage.',
-      reading:
-        'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer.html',
-    },
-    {
-      question:
-        'S3 bucket will receive high‑throughput uploads from many clients. Which configuration ensures scalable performance?',
-      choices: [
-        'Use random or hashed prefixes in object keys to avoid hot partitions',
-        'Use sequential timestamps in keys for easy retrieval',
-        'Store all objects in a single folder path',
-        'Enable bucket versioning only',
-      ],
-      type: 'MCQs',
-      correctAnswers: [
-        'Use random or hashed prefixes in object keys to avoid hot partitions',
-      ],
-      score: 10,
-      explanation:
-        'Distributing keys across prefixes spreads load across partitions, improving throughput :contentReference[oaicite:2]{index=2}.',
-      reading:
-        'https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html',
-    },
-    {
-      question:
-        'You have two AWS accounts: A hosts S3 bucket data‑bucket, and B runs analytics that need read access. Which steps are required? (Select all that apply)',
-      choices: [
-        'In Account A, add a bucket policy granting GetObject permission to Account B’s role ARN',
-        'In Account B, attach AmazonS3ReadOnlyAccess to the analytics role',
-        'Enable cross‑region replication to the analytics account',
-        'Set the bucket ACL to ‘public‑read’ to allow access across accounts',
-      ],
-      type: 'MAQs',
-      correctAnswers: [
-        'In Account A, add a bucket policy granting GetObject permission to Account B’s role ARN',
-        'In Account B, attach AmazonS3ReadOnlyAccess to the analytics role',
-      ],
-      score: 10,
-      explanation:
-        'Bucket policy allows cross-account access; attaching ReadOnlyAccess grants necessary permissions. Replication isn’t required and ACL public-read is insecure.',
-      reading:
-        'https://docs.aws.amazon.com/AmazonS3/latest/dev/example-walkthroughs.html',
-    },
+
+    
+        {
+          question:
+            'You need to move a 5GB object from your on-premise server to an S3 bucket using the AWS CLI. What command ensures a reliable and resumable transfer?',
+          choices: [
+            'aws s3 sync ./data s3://my-bucket/',
+            'aws s3 mv ./file.zip s3://my-bucket/',
+            'aws s3 cp ./file.zip s3://my-bucket/ --storage-class STANDARD',
+            'aws s3 cp ./file.zip s3://my-bucket/ --expected-size 5GB',
+          ],
+          type: 'MCQs',
+          correctAnswers: ['aws s3 cp ./file.zip s3://my-bucket/ --storage-class STANDARD'],
+          score: 10,
+          explanation:
+            'The `aws s3 cp` command performs a multipart upload automatically for large files. `--storage-class` can optionally specify tier, but it’s not required. `sync` is for directories.',
+          reading: 'https://docs.aws.amazon.com/cli/latest/reference/s3/cp.html',
+        },
+        {
+          question:
+            'Your S3 bucket hosts a static website. Users report 403 errors when visiting the URL. What is the most likely fix?',
+          choices: [
+            'Enable static website hosting and configure an index document',
+            'Change the bucket storage class to One Zone-IA',
+            'Enable versioning on the bucket',
+            'Increase object size limits',
+          ],
+          type: 'MCQs',
+          correctAnswers: ['Enable static website hosting and configure an index document'],
+          score: 10,
+          explanation:
+            'S3 static hosting requires an index document. 403 errors occur if the index.html is not defined or public access is denied.',
+          reading: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html',
+        },
+        {
+          question:
+            'An application is hosted in a single AZ and you need high availability during AZ failure. What’s the recommended architecture change?',
+          choices: [
+            'Deploy instances across multiple Availability Zones in the same Region',
+            'Migrate the app to AWS Local Zones',
+            'Deploy the app in a single Region but with auto-scaling',
+            'Add a backup EC2 in the same AZ',
+          ],
+          type: 'MCQs',
+          correctAnswers: ['Deploy instances across multiple Availability Zones in the same Region'],
+          score: 10,
+          explanation:
+            'Multiple AZs in a single Region offer high availability without inter-region latency.',
+          reading: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html',
+        },
+        {
+          question:
+            'You want to list all buckets in your AWS account using the CLI. What is the correct command?',
+          choices: [
+            'aws s3 list',
+            'aws s3 ls',
+            'aws s3api list-buckets',
+            'aws s3 show buckets',
+          ],
+          type: 'MAQs',
+          correctAnswers: ['aws s3 ls', 'aws s3api list-buckets'],
+          score: 10,
+          explanation:
+            '`aws s3 ls` is a simple list; `s3api list-buckets` provides structured output. Both are valid.',
+          reading: 'https://docs.aws.amazon.com/cli/latest/reference/s3api/list-buckets.html',
+        },
+        {
+          question:
+            'You are planning to deploy a latency-sensitive application for users in Asia and North America. Which strategy improves performance and resilience?',
+          choices: [
+            'Deploy to multiple AWS Regions like us-east-1 and ap-south-1',
+            'Deploy to a single Region but enable CloudWatch alarms',
+            'Use AWS Lambda with single Region fallback',
+            'Host in one Region and rely on auto-scaling',
+          ],
+          type: 'MCQs',
+          correctAnswers: ['Deploy to multiple AWS Regions like us-east-1 and ap-south-1'],
+          score: 10,
+          explanation:
+            'Multi-Region deployments provide global reach, lower latency, and higher fault tolerance.',
+          reading: 'https://aws.amazon.com/architecture/global-infrastructure/',
+        },
+      
+        
   ],
 }
 
